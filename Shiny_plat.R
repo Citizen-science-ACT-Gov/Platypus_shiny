@@ -113,7 +113,7 @@ ui <- fluidPage(
   
   # testing to add a picture to the APP
   tags$img(height = 100, width = 300,
-           src = "https://github.com/Citizen-science-ACT-Gov/Platypus_shiny/blob/main/Waterwatch_logo_Upper_Murrumbidgee.png")
+           src = "https://f079a2602f82498e927c63b0219b50f9.app.rstudio.cloud/file_show?path=%2Fcloud%2Fproject%2FWaterwatch_logo_Upper_Murrumbidgee.png")
   
   )
 
