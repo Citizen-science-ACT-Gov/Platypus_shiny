@@ -105,11 +105,15 @@ ui <- fluidPage(tags$head(
      
       # Add leaflet map
       column(3,
+             h2("Site map"),
+             "Click on Platypus icon to show site name",
              
              leafletOutput("my_map")),
     
     
-      column(3, dataTableOutput(outputId = "survey_table")),
+      column(3,
+             h2("Data summary table"),
+             dataTableOutput(outputId = "survey_table")),
       
       column(4, 
              tags$br(),
@@ -166,7 +170,7 @@ server <- function (input, output) {
       addTiles() %>%
       fitBounds(lng1 = 148.8, lat1 = -35.1, lng2 = 149.35, lat2 = -36.3)%>%
       addProviderTiles("Esri.WorldImagery") %>%
-      addMarkers(~longitude, ~latitude, icon = platyIcons[p$Type], label = (p$site_id), labelOptions = labelOptions(noHide = T, direction = "bottom",
+      addMarkers(~longitude, ~latitude, icon = platyIcons[p$Type], popup = (p$site_id), labelOptions = labelOptions(noHide = T, direction = "bottom",
                                                                                                                     style = list(
                                                                                                                       "color" = "black",
                                                                                                                       "font-family" = "serif",
@@ -189,26 +193,33 @@ server <- function (input, output) {
   # Create a reactive plot based on the inputs listed
   
   output$col_plot <- renderPlot({
-    ggplot(plot_data(), aes(date, number), colour = "burlywood4")+
-      geom_col()+
+    ggplot(plot_data(), )+
+      geom_col(aes(date, number, colour = "Animals observed"))+
+      geom_point(aes(date, Survey, colour = "Survey conducted"))+
       ggtitle("Number of animals observed")+
       scale_x_date(name = "Date",  date_breaks = "2 months", date_labels = "%m/%y", limits = c(input$date[1], input$date[2])) +
       ylab("Number of individuals")+
+      scale_colour_manual(values = c("black", "Red"))+
+      labs(colour = "Legend")+
       cleanup +
       theme(plot.title = element_text(family = "Helvetica", face = "bold", size = (15), colour = "blue4", hjust = 0.5),
             axis.title = element_text(size = (15), colour = "blue4", face = "bold"))
     
   })
   
+ 
+  
+  
   # subset data for table 
   table_data <- reactive({
     p %>%
       filter(
+        species == input$species &
         site_id == input$site) %>%
       mutate(year = substr(date, 1,4))%>%
       select("year", "number")%>%
       group_by(year)%>%
-      summarise(max(number))
+      summarise("Maximum number of animals detected" = max(number), "Average animals per survey" = mean(number), "Surveys conducted" = n())
   })
   
   
@@ -246,8 +257,23 @@ p %>%  filter(
 
 
 
+ggplot(p,  )+
+  geom_col(aes(date, number, colour = "Green"))+
+  geom_point(aes(date, Survey, colour = "Red"))+
+  ggtitle("Number of animals observed")+
+  scale_x_date(name = "Date",  date_breaks = "2 months", date_labels = "%m/%y") +
+  ylab("Number of individuals")+
+  labs(colour = "Legend")+
+  scale_colour_manual(values = c("black", "Red"),
+                      labels = c("Animals observed", "Survey conducted"))+
+  cleanup +
+  theme(plot.title = element_text(family = "Helvetica", face = "bold", size = (15), colour = "blue4", hjust = 0.5),
+        axis.title = element_text(size = (15), colour = "blue4", face = "bold"))
 
 
+
+p %>% filter(date >= "2019-01-01") %>%
+  distinct(site_id)
 
 
 
