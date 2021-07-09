@@ -43,7 +43,7 @@ library(plotly)
 
 #2 Read and tidy platypus month data 
 
-p <- read.csv("app_data.csv")
+p <- read.csv("survey_data.csv")
 
 
 p <- p %>% mutate(
@@ -82,17 +82,12 @@ ui <- fluidPage(tags$head(
   # App title 
   fluidRow(h1("Platypus and Rakali observations - ACT Waterwatch", align = "center", style = "color:midnightblue;")),
   fluidRow(
-    column(4, #select species 
+    column(3, #select species 
       wellPanel(selectInput(inputId = "species", label = "Species",
                   choices = unique(p$species),
                   selected = "platypus"),
       
-      #select data type
-      selectInput(inputId = "type", label = strong("Type of data"),
-                  choices = unique(p$Type),
-                  selected = "survey"),
-      
-      # select site
+         # select site
       selectInput(inputId = "site", label = "Site",
                   choices = unique(p$site_id),
                   selected = "Cooma_Ck"),
@@ -101,30 +96,50 @@ ui <- fluidPage(tags$head(
       dateRangeInput(inputId = "date", 
                      label = "Date range",
                      format = "dd/mm/yyyy",
-                     start = "2016-01-01",
+                     start = "2014-01-01",
                      separator = "to"))),
-      column(8, plotOutput(outputId = "col_plot", height = "400px"))),
+      column(9, plotOutput(outputId = "col_plot", height = "400px"))),
   
   fluidRow(
       
      
       # Add leaflet map
-      column(4, leafletOutput("my_map")),
+      column(3,
+             
+             leafletOutput("my_map")),
     
     
-      column(5, dataTableOutput(outputId = "survey_table")),
+      column(3, dataTableOutput(outputId = "survey_table")),
       
-      column(3, 
+      column(4, 
              tags$br(),
              tags$br(),
-             "The data presented is collected by volunteers during August of each year as part of the Platypus month program", 
+             h2("Details of the surveys"),
+             tags$br(),
+             "The data presented is collected by volunteers during August of each year as part of the Platypus month program. 
+             During the surveys data are collected at 10 sites along a reach of the waterway. 
+             Reach length is generally ranges for 800 m to 1 km.  ", 
              tags$br(),
              tags$br(),
              tags$br(), 
              tags$br(),
-             tags$br(),
-      
-      # testing to add a picture to the APP
+             tags$br()),
+      column(2, 
+      # add the Waterwatch logo to the bottom right hand corner of the map
+      tags$br(),
+      tags$br(),
+      tags$br(),
+      tags$br(), 
+      tags$br(),
+      tags$br(),
+      tags$br(),
+      tags$br(),
+      tags$br(), 
+      tags$br(),
+      tags$br(),
+      tags$br(), 
+      tags$br(),
+      tags$br(),
       tags$img(height = 100, width = 250,
                src = "https://f079a2602f82498e927c63b0219b50f9.app.rstudio.cloud/file_show?path=%2Fcloud%2Fproject%2FWaterwatch_logo_Upper_Murrumbidgee.png"),
       
@@ -149,10 +164,16 @@ server <- function (input, output) {
     
     leaflet(p) %>%
       addTiles() %>%
-      fitBounds(lng1 = 149.0, lat1 = -35.0, lng2 = 150.0, lat2 = -36.0)%>%
-      addMarkers(~longitude, ~latitude, icon = platyIcons[p$Type]) 
-    
-  })
+      fitBounds(lng1 = 148.8, lat1 = -35.1, lng2 = 149.35, lat2 = -36.3)%>%
+      addProviderTiles("Esri.WorldImagery") %>%
+      addMarkers(~longitude, ~latitude, icon = platyIcons[p$Type], label = (p$site_id), labelOptions = labelOptions(noHide = T, direction = "bottom",
+                                                                                                                    style = list(
+                                                                                                                      "color" = "black",
+                                                                                                                      "font-family" = "serif",
+                                                                                                                                                                                                                                        "font-size" = "12px"
+                                                                                                                    )))
+                 })
+  leafletOutput('mymap', height = 600)
   
   # subset data for plot 
   
@@ -160,7 +181,6 @@ server <- function (input, output) {
     p %>%
       filter(
         species == input$species &
-          Type == input$type &
           site_id == input$site &
           date >=  input$date[1] &
           date <= input$date[2])
