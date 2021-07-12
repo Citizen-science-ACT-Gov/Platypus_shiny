@@ -89,7 +89,14 @@ ui <- fluidPage(tags$head(
   # App title 
   fluidRow(h1("Platypus and Rakali observations - ACT Waterwatch", align = "center", style = "color:midnightblue;")),
   fluidRow(
-    column(3, #select species 
+    column(3,
+           br(),
+           br(),
+           br(),
+           br(),
+           br(),
+           
+           #select species 
       wellPanel(selectInput(inputId = "species", label = "Species",
                   choices = unique(platy$species),
                   selected = "platypus"),
@@ -105,7 +112,9 @@ ui <- fluidPage(tags$head(
                      format = "dd/mm/yyyy",
                      start = "2014-01-01",
                      separator = "to"))),
-      column(9, plotlyOutput(outputId = "col_plot", height = "400px"),
+      column(9, 
+             h2(textOutput("figurehead")),
+             plotlyOutput(outputId = "col_plot", height = "400px"),
     "Figure 1. Number of sightings. Red dot indicates that a survey was conducted and bars indicate the 
     number of individuals observed")
     ),
@@ -197,6 +206,7 @@ server <- function (input, output, session) {
 
   
   # Create a reactive plot based on the inputs listed
+  output$figurehead <- renderText({paste0(input$species, " surveys at ", input$site)})
   
   output$col_plot <- renderPlotly({
     ggplotly(
