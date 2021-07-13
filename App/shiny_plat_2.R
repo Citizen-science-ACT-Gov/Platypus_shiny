@@ -7,9 +7,6 @@
 #3 set up a ui for the shiny app
 
 
-
-
-
 #1 load libraries 
 
 #install.packages("dplyr")
@@ -27,7 +24,9 @@
 #install.packages("plotly")
 # install.packages("DT")
 
+setwd("/cloud/project/App")
 
+getwd()
 library(dplyr)
 
 library(tidyr)
@@ -51,7 +50,7 @@ platy <- read.csv("survey_data.csv")
 
 platy <- platy%>% mutate(
   date = as.Date(date, format = "%d/%m/%Y"),
-  species = trimws(species),
+  species = as.factor(trimws(species)),
   site_id = as.factor(site_id)
 )
 
@@ -125,13 +124,13 @@ ui <- fluidPage(tags$head(
       # Add leaflet map
       column(3,
              h2("Site map"),
-             "Click on Platypus icon to show site name and select site.",
-             
-             leafletOutput("mymap")),
+             leafletOutput("mymap"),
+             "Figure 2. Upper Murrumbidgee waterwatch Platypus month survey sites. Click on platypus icons to display site name and select the site to be displayed in the Figure 1 and the data table. "),
     
       # Add summary data table
       column(2,
              h2("Data summary table"),
+             textOutput("tablecaption"),
              DT::dataTableOutput(outputId = "survey_table")),
       
       column(5, 
@@ -146,12 +145,11 @@ ui <- fluidPage(tags$head(
              At each site surveys are conducted at dawn and dusk when Platypus are most active.", 
             ),
      
-     column(2, tags$img(height = 100, width = 250,
-               src = "https://f079a2602f82498e927c63b0219b50f9.app.rstudio.cloud/file_show?path=%2Fcloud%2Fproject%2FWaterwatch_logo_Upper_Murrumbidgee.png"))
+     column(2, tags$img(src = "Waterwatch_logo_Upper_Murrumbidgee.png", height="80%", width="80%", align = "right"))
      ))
     
 
-
+#"https://f079a2602f82498e927c63b0219b50f9.app.rstudio.cloud/file_show?path=%2Fcloud%2Fproject%2FWaterwatch_logo_Upper_Murrumbidgee.png"))
 
 
 #4 Define server function 
@@ -160,6 +158,9 @@ html_legend <- "<img src='https://github.com/Citizen-science-ACT-Gov/platy_image
 <img src='https://github.com/Citizen-science-ACT-Gov/platy_images/blob/main/platy_image_2.png'>Adhoc"
 
 
+
+
+platyIcon = makeIcon("platy_image.png", 40, 40)
 
 
 
@@ -172,18 +173,18 @@ server <- function (input, output, session) {
       fitBounds(lng1 = 148.8, lat1 = -35.1, lng2 = 149.35, lat2 = -36.3)%>%
       addProviderTiles("Esri.WorldImagery") %>%
       addMarkers(data = reaches, ~longitude, ~latitude, layerId = ~site_id, 
-                  popup = ~site_id, icon = platyIcons[p$Type],
+                  popup = ~site_id, icon = platyIcon,
                  labelOptions = labelOptions(noHide = T, direction = "bottom", 
                                              style = list("color" = "black",
                                                           "font-family" = "serif",
                                                           "font-size" = "12px")))
                  })
   leafletOutput('mymap', height = 600)
-  
+  # 
   # subset data for plot 
   
   plot_data <- reactive({
-    p %>%
+    platy %>%
       filter(
         species == input$species &
           site_id == input$site &
@@ -202,7 +203,7 @@ server <- function (input, output, session) {
   })
   
   
-  
+
 
   
   # Create a reactive plot based on the inputs listed
@@ -213,14 +214,13 @@ server <- function (input, output, session) {
       ggplot(plot_data(), )+
       geom_col(aes(date, number, colour = "Animals observed"))+
       geom_point(aes(date, Survey, colour = "Survey conducted"))+
-      ggtitle("Number of animals observed")+
       scale_x_date(name = "Date",  date_breaks = "6 months", date_labels = "%m/%y", limits = c(input$date[1], input$date[2])) +
       ylab("Number of individuals")+
       scale_colour_manual(values = c("black", "Red"))+
       labs(colour = "Legend")+
       cleanup +
       theme(plot.title = element_text(family = "Helvetica", face = "bold", size = (15), colour = "blue4", hjust = 0.5),
-            axis.title = element_text(size = (15), colour = "blue4", face = "bold")))
+            axis.title = element_text(size = (15), colour = "blue4", face = "bold"))  )
     
   })
   
@@ -243,6 +243,8 @@ server <- function (input, output, session) {
   
   
   ## Create reactive table for data 
+  output$tablecaption <- renderText({paste0("Table 1. Record of ", input$species, " surveys at ", input$site)})
+
   
   output$survey_table <- DT::renderDataTable({DT::datatable(table_data (), options=list(iDisplayLength=5,                    # initial number of records
                                                                                                        aLengthMenu=c(5,10),                  # records/page options
@@ -258,16 +260,6 @@ server <- function (input, output, session) {
 # 5 run the shiny APP   
 
 shinyApp(ui = ui, server = server)
-
-
-
-
-
-# establish and connect to shinyapps.io 
-
-install.packages('rsconnect')
-
-rsconnect::setAccountInfo(name='citizen-science-act-gov', token='6BAD85804410F294674F83FE6AD75B0C', secret='LWBMqwGfkVcSqOQvw1rSNLne6k3mH2dsQjrYMGpF')
 
 
 
