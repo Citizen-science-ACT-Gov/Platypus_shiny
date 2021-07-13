@@ -24,9 +24,9 @@
 #install.packages("plotly")
 # install.packages("DT")
 
-setwd("/cloud/project/App")
+#setwd("/cloud/project/App")
 
-getwd()
+#getwd()
 library(dplyr)
 
 library(tidyr)
