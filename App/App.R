@@ -86,7 +86,7 @@ ui <- fluidPage(tags$head(
       "))
   ),
   # App title 
-  fluidRow(h1("Platypus and Rakali observations - ACT Waterwatch", align = "center", style = "color:midnightblue;")),
+  fluidRow(h1("Platypus and Rakali observations - Upper Murrumbidgee Waterwatch", align = "center", style = "color:midnightblue;")),
   fluidRow(
     column(3,
            br(),
@@ -137,15 +137,13 @@ ui <- fluidPage(tags$head(
              
              h2("Details of the surveys"),
              tags$br(),
-             "Platypus month is conducted during August. 
-             The sites currently being surveyed are Cooma Creek, Jerrabomberra Creek, below Coppins Crossing, Mittagang Crossing, Point Hut Crossing, Scottsdale, Queanbeyan and Tidbinbilla. 
-             Data from some sites that have been previously included in the survey are also available. 
-             Currently, each year four surveys are conducted at each site to keep survey effort consistent across the sites. 
-             In previous years a different number of surveys were conducted at the different sites. At each site, 8 to 10 points are surveyed along a section of 800 m to 1 km. 
-             At each site surveys are conducted at dawn and dusk when Platypus are most active.", 
+             "Platypus Month is conducted during August every year. The sites currently being surveyed are Cooma Creek, Jerrabomberra Creek in the Nature Reserve, the Molonglo River below Coppins Crossing, the Murrumbidgee River at Mittagang Crossing, Point Hut Crossing and Scottsdale Bush Heritage Reserve, the Queanbeyan River and the Sanctuary at Tidbinbilla. 
+Data from some sites that have been previously been included in the survey are also available. While the number  of surveys has varied in the past, a minimum of four surveys are currently conducted every year at each site to keep survey effort consistent. At each site, 6 to 10 points are surveyed along a section of 500 m to 1 km. A minimum of two surveys are conducted at dawn and two at dusk when Platypus are most detectable.
+", 
             ),
      
-     column(2, tags$img(src = "Waterwatch_logo_Upper_Murrumbidgee.png", height="80%", width="80%", align = "right"))
+     column(2, #tags$img(src = "Waterwatch_logo_Upper_Murrumbidgee.png", height="80%", width="80%", align = "right"))
+            imageOutput("UMWlogo"))
      ))
     
 
@@ -154,8 +152,8 @@ ui <- fluidPage(tags$head(
 
 #4 Define server function 
 
-html_legend <- "<img src='https://github.com/Citizen-science-ACT-Gov/platy_images/blob/main/platy_image.png'>survey<br/>
-<img src='https://github.com/Citizen-science-ACT-Gov/platy_images/blob/main/platy_image_2.png'>Adhoc"
+#html_legend <- "<img src='https://github.com/Citizen-science-ACT-Gov/platy_images/blob/main/platy_image.png'>survey<br/>
+#<img src='https://github.com/Citizen-science-ACT-Gov/platy_images/blob/main/platy_image_2.png'>Adhoc"
 
 
 
@@ -251,6 +249,7 @@ server <- function (input, output, session) {
                                                                                                        bLengthChange=0,                       # show/hide records per page dropdown
                                                                                                        bFilter=0,                                    # global search box on/off
                                                                                                        bInfo=0)) })
+  output$UMWlogo <- renderImage(list(src = "Waterwatch_logo_Upper_Murrumbidgee.png", width = 400, height = 200), deleteFile = FALSE)
   
   
   
