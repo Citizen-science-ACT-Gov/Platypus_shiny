@@ -112,7 +112,7 @@ ui <- fluidPage(tags$head(
                      start = "2014-01-01",
                      separator = "to"))),
       column(9, 
-             h2(textOutput("figurehead")),
+             h2(textOutput("figurehead"), align = "center"),
              plotlyOutput(outputId = "col_plot", height = "400px"),
     "Figure 1. Number of sightings. Red dot indicates that a survey was conducted and bars indicate the 
     number of individuals observed")
