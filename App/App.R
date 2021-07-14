@@ -142,7 +142,7 @@ Data from some sites that have been previously been included in the survey are a
 ", 
             ),
      
-     column(2, #tags$img(src = "Waterwatch_logo_Upper_Murrumbidgee.png", height="80%", width="80%", align = "right"))
+     column(2, #tags$img(src = "Waterwatch_logo_Upper_Murrumbidgee.png", height="80%", width="80%", align = "right")) # this code blanked out as image was displaying inconsistently. I will leave code until checked on different platforms
             imageOutput("UMWlogo"))
      ))
     
