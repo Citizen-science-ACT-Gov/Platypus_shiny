@@ -1,11 +1,11 @@
 name: platy_portal
 title:
 username:
-account: danswell
+account: citizen-science-act-gov
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 4379913
 bundleId: 4813710
-url: https://danswell.shinyapps.io/platy_portal/
+url: https://citizen-science-act-gov.shinyapps.io/platy_portal/
 when: 1626154109.99834
 lastSyncTime: 1626154109.99835
