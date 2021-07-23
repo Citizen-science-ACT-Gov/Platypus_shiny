@@ -24,9 +24,10 @@
 #install.packages("plotly")
 # install.packages("DT")
 
+getwd()
 setwd('./App')
 
-#getwd()
+
 library(dplyr)
 
 library(tidyr)
