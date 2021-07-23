@@ -137,23 +137,33 @@ ui <- fluidPage(tags$head(
              
              h2("Details of the surveys"),
              tags$br(),
-             "Platypus Month is conducted during August every year. The sites currently being surveyed are Cooma Creek, Jerrabomberra Creek in the Nature Reserve, the Molonglo River below Coppins Crossing, the Murrumbidgee River at Mittagang Crossing, Point Hut Crossing and Scottsdale Bush Heritage Reserve, the Queanbeyan River and the Sanctuary at Tidbinbilla. 
-Data from some sites that have been previously been included in the survey are also available. While the number  of surveys has varied in the past, a minimum of four surveys are currently conducted every year at each site to keep survey effort consistent. At each site, 6 to 10 points are surveyed along a section of 500 m to 1 km. A minimum of two surveys are conducted at dawn and two at dusk when Platypus are most detectable.
-", 
+             h3(("Platypus Month is conducted during August every year. The sites currently being surveyed are Cooma Creek, Jerrabomberra Creek in the Nature Reserve, the Molonglo River below Coppins Crossing, the Murrumbidgee River at Mittagang 
+             Crossing, Point Hut Crossing and Scottsdale Bush Heritage Reserve, the Queanbeyan River and the Sanctuary at Tidbinbilla. 
+             Data from some sites that have been previously been included in the survey are also available. While the number  of surveys has varied 
+             in the past, a minimum of four surveys are currently conducted every year at each site to keep survey effort consistent. At each site, 
+             6 to 10 points are surveyed along a section of 500 m to 1 km. A minimum of two surveys are conducted at dawn and two at dusk when Platypus are most detectable."),
+             style = "font-size:24px;"), 
             ),
      
-     column(2, #tags$img(src = "Waterwatch_logo_Upper_Murrumbidgee.png", height="80%", width="80%", align = "right")) # this code blanked out as image was displaying inconsistently. I will leave code until checked on different platforms
+     column(2, 
+            br(),
+            br(),
+            br(),
+            br(),
+            br(),
+            br(),
+            br(),
+            br(),
+            br(),
+            br(),
             imageOutput("UMWlogo"))
      ))
     
 
-#"https://f079a2602f82498e927c63b0219b50f9.app.rstudio.cloud/file_show?path=%2Fcloud%2Fproject%2FWaterwatch_logo_Upper_Murrumbidgee.png"))
 
 
 #4 Define server function 
 
-#html_legend <- "<img src='https://github.com/Citizen-science-ACT-Gov/platy_images/blob/main/platy_image.png'>survey<br/>
-#<img src='https://github.com/Citizen-science-ACT-Gov/platy_images/blob/main/platy_image_2.png'>Adhoc"
 
 
 
@@ -213,6 +223,7 @@ server <- function (input, output, session) {
       geom_col(aes(date, number, colour = "Animals observed"))+
       geom_point(aes(date, Survey, colour = "Survey conducted"))+
       scale_x_date(name = "Date",  date_breaks = "6 months", date_labels = "%m/%y", limits = c(input$date[1], input$date[2])) +
+        scale_y_continuous(limits = c(0, 8))+
       ylab("Number of individuals")+
       scale_colour_manual(values = c("black", "Red"))+
       labs(colour = "Legend")+

@@ -16,6 +16,7 @@ library(rsconnect)
 rsconnect::deployApp('./App', appName = "platy_portal")
 
 
+y
 
 
 
