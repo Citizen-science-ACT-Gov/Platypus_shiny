@@ -24,8 +24,7 @@
 #install.packages("plotly")
 # install.packages("DT")
 
-getwd()
-setwd('./App')
+
 
 
 library(dplyr)

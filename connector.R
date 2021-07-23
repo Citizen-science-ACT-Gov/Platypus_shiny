@@ -9,13 +9,13 @@ rsconnect::setAccountInfo(name='citizen-science-act-gov',
                           secret='LWBMqwGfkVcSqOQvw1rSNLne6k3mH2dsQjrYMGpF')
 
 
+setwd("/cloud/project/")
+
 
 library(rsconnect)
 rsconnect::deployApp('./App', appName = "platy_portal")
 
 
-getwd()
-setwd("/cloud/project/")
 
 
 
