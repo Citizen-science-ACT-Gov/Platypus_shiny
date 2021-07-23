@@ -9,3 +9,8 @@ rsconnect::setAccountInfo(name='citizen-science-act-gov',
                           secret='LWBMqwGfkVcSqOQvw1rSNLne6k3mH2dsQjrYMGpF')
 
 
+
+
+library(rsconnect)
+rsconnect::deployApp("App.R")
+
