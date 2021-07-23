@@ -1,0 +1,13 @@
+name: Platy-portal
+title: Platy-portal
+username:
+account: citizen-science-act-gov
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 4414320
+bundleId: 4847956
+url: https://citizen-science-act-gov.shinyapps.io/Platy-portal/
+when: 1627016690.48313
+lastSyncTime: 1627016690.48314
+asMultiple: FALSE
+asStatic: FALSE

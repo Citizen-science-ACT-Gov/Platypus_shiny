@@ -24,7 +24,7 @@
 #install.packages("plotly")
 # install.packages("DT")
 
-#setwd("/cloud/project/App")
+setwd('./App')
 
 #getwd()
 library(dplyr)
@@ -260,7 +260,7 @@ server <- function (input, output, session) {
 
 shinyApp(ui = ui, server = server)
 
-rsconnect::deployApp()
+
 
 
 
