@@ -66,12 +66,6 @@ cleanup <- theme(panel.grid.major = element_blank(),
                  axis.text.x = element_text(color = "black"),
                  axis.text.y = element_text(color = "black"))
 
-platyIcons <- iconList(
-  "survey" = makeIcon("platy_image.png", 40, 40),
-  "adhoc" = makeIcon("platy_image_2.png", 40, 40)
-)
-
-
 
 
 #3 set up a ui for the shiny app
@@ -125,50 +119,34 @@ ui <- fluidPage(tags$head(
       column(3,
              h2("Site map"),
              leafletOutput("mymap"),
-             "Figure 2. Upper Murrumbidgee waterwatch Platypus month survey sites. Click on platypus icons to display site name and select the site to be displayed in the Figure 1 and the data table. "),
-    
+             "Figure 2. Upper Murrumbidgee waterwatch Platypus month survey sites. Click on site markers to display site name and select the site to be displayed in the Figure 1 and the data table. "),
+      column(1),
       # Add summary data table
       column(2,
-             h2("Data summary table"),
+             h2("Data summary"),
              textOutput("tablecaption"),
              DT::dataTableOutput(outputId = "survey_table")),
-      
+      column(1),
       column(5, 
              
              h2("Details of the surveys"),
-             tags$br(),
              h3(("Platypus Month is conducted during August every year. The sites currently being surveyed are Cooma Creek, Jerrabomberra Creek in the Nature Reserve, the Molonglo River below Coppins Crossing, the Murrumbidgee River at Mittagang 
              Crossing, Point Hut Crossing and Scottsdale Bush Heritage Reserve, the Queanbeyan River and the Sanctuary at Tidbinbilla. 
              Data from some sites that have been previously been included in the survey are also available. While the number  of surveys has varied 
              in the past, a minimum of four surveys are currently conducted every year at each site to keep survey effort consistent. At each site, 
              6 to 10 points are surveyed along a section of 500 m to 1 km. A minimum of two surveys are conducted at dawn and two at dusk when Platypus are most detectable."),
-             style = "font-size:24px;"), 
-            ),
+             style = "font-size:18px;"), 
+             
+             imageOutput("UMWlogo"))
+            )
      
-     column(2, 
-            br(),
-            br(),
-            br(),
-            br(),
-            br(),
-            br(),
-            br(),
-            br(),
-            br(),
-            br(),
-            imageOutput("UMWlogo"))
-     ))
     
+            
+     )
 
-
+platyIcon = makeIcon(iconUrl = "platy_image.png", 40, 40) ## moved this
 
 #4 Define server function 
-
-
-
-
-
-platyIcon = makeIcon("platy_image.png", 40, 40)
 
 
 
@@ -176,12 +154,13 @@ platyIcon = makeIcon("platy_image.png", 40, 40)
 server <- function (input, output, session) {
   output$mymap <- renderLeaflet({
     
+    
     leaflet(reaches) %>%
       addTiles() %>%
       fitBounds(lng1 = 148.8, lat1 = -35.1, lng2 = 149.35, lat2 = -36.3)%>%
       addProviderTiles("Esri.WorldImagery") %>%
       addMarkers(data = reaches, ~longitude, ~latitude, layerId = ~site_id, 
-                  popup = ~site_id, icon = platyIcon,
+                  popup = ~site_id, #icon = platyIcon,   # platyIcon removed as it didn't display consistently on all platforms 
                  labelOptions = labelOptions(noHide = T, direction = "bottom", 
                                              style = list("color" = "black",
                                                           "font-family" = "serif",
@@ -260,7 +239,7 @@ server <- function (input, output, session) {
                                                                                                        bLengthChange=0,                       # show/hide records per page dropdown
                                                                                                        bFilter=0,                                    # global search box on/off
                                                                                                        bInfo=0)) })
-  output$UMWlogo <- renderImage(list(src = "Waterwatch_logo_Upper_Murrumbidgee.png", width = 400, height = 200), deleteFile = FALSE)
+  output$UMWlogo <- renderImage(list(src = "Waterwatch_logo_Upper_Murrumbidgee.png", width = 300, height = 150), deleteFile = FALSE)
   
   
   
