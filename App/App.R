@@ -48,10 +48,13 @@ library(DT)
 platy <- read.csv("survey_data.csv")
 
 
+
+
 platy <- platy%>% mutate(
   date = as.Date(date, format = "%d/%m/%Y"),
   species = as.factor(trimws(species)),
-  site_id = as.factor(site_id)
+  site_id = as.factor(trimws(site_id)),
+  datetime = as.POSIXct (paste(date, time))
 )
 
 reaches <- platy %>% select("site_id", "latitude", "longitude") %>%
@@ -175,8 +178,8 @@ server <- function (input, output, session) {
       filter(
         species == input$species &
           site_id == input$site &
-          date >=  input$date[1] &
-          date <= input$date[2])
+          datetime >=  input$date[1] &
+          datetime <= input$date[2])
   })
   
  
@@ -199,16 +202,18 @@ server <- function (input, output, session) {
   output$col_plot <- renderPlotly({
     ggplotly(
       ggplot(plot_data(), )+
-      geom_col(aes(date, number, colour = "Animals observed"))+
-      geom_point(aes(date, Survey, colour = "Survey conducted"))+
-      scale_x_date(name = "Date",  date_breaks = "6 months", date_labels = "%m/%y", limits = c(input$date[1], input$date[2])) +
-        scale_y_continuous(limits = c(0, 8))+
+      geom_col(aes(datetime, number, colour = "Animals observed"))+
+      geom_point(aes(datetime, Survey, colour = "Survey conducted"))+
+      #scale_x_datetime(name = "Date",  
+                        #date_labels = "%d/%m/%y", limits = c( as.POSIXct(paste(input$date[1], "00:00:00")), as.POSIXct(paste(input$date[2], "23:59:00")) ))+ #date_breaks = "6 months",
+        #scale_y_continuous(limits = c(0, 8))+
       ylab("Number of individuals")+
+      xlab("Date")+  
       scale_colour_manual(values = c("black", "Red"))+
       labs(colour = "Legend")+
       cleanup +
       theme(plot.title = element_text(family = "Helvetica", face = "bold", size = (15), colour = "blue4", hjust = 0.5),
-            axis.title = element_text(size = (15), colour = "blue4", face = "bold"))  )
+            axis.title = element_text(size = (15), colour = "blue4", face = "bold")), dynamicTicks = TRUE)
     
   })
   
@@ -249,13 +254,6 @@ server <- function (input, output, session) {
 # 5 run the shiny APP   
 
 shinyApp(ui = ui, server = server)
-
-
-
-
-
-
-
 
 
 
